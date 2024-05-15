@@ -27,6 +27,14 @@ export default function Home() {
             >
               <span>Login</span><ArrowRightIcon className="w-5 md:w-6" />
             </Link>
+
+            {/* go to dashboard */}
+            <Link
+              href="/dashboard"
+              className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-0"
+            >
+              <span>Dashboard</span>
+            </Link>
         </div>
         <div className="flex items-center justify-center p-6 md:w-3/5 md:px-28 md:py-12">
           {/* Add Hero Images Here */}
