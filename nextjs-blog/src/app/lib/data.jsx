@@ -1,8 +1,8 @@
-import { sql } from '@vercel/postgres';
+import { sql,db } from '@vercel/postgres';
 import LatestInvoiceRaw from '../ui/dashboard/latest-invoices';
-import {Revenue} from '@/app/lib/definitions'
-import { db } from '@vercel/postgres';
 import { NextResponse } from 'next/server';
+import { unstable_noStore as noStore } from 'next/cache';
+import { Revenue } from '@/app/lib/definitions';
 
 const data = await sql<LatestInvoiceRaw>`
     SELECT invoices.amount, customers.name, customers.image_url, customers.email
@@ -30,27 +30,31 @@ export async function fetchCardData(){
     ])
 }
 
+// Function to fetch revenue data
 export async function fetchRevenue() {
-    // const client = await db.connect();
-    // const data = await client.sql`SELECT revenue`;
-    // console.log(data)
-
+    noStore(); 
     try {
-        const result = await sql`SELECT * FROM revenue;`;
-        console.log(result)
-        return NextResponse.json({ result }, { status: 200 });
-    } 
-    catch (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+      const data = await sql`SELECT * FROM revenue;`;
+  
+      const revenueData = data.rows.map(row => ({
+        month: String(row.month),
+        revenue: parseInt(row.revenue),
+      }));
+  
+      // Create an array of Revenue objects
+      const revenueArray = revenueData.map(item => {
+        return {
+          ...Revenue,
+          month: item.month,
+          revenue: item.revenue,
+        };
+      });
+  
+      console.log("Revenue data added successfully", revenueArray);
+      return revenueArray;
+  
+    } catch (error) {
+      console.error("DatabaseError: ", error);
+      throw new Error("Failed to fetch Revenue");
     }
-
-
-//     console.log('Fetching revenue data...');
-//     await new Promise((resolve) => setTimeout(resolve, 3000));
-//     console.log('Data fetch completed after 3 seconds.');
-//     const data = await sql<Revenue>`SELECT * FROM revenue`;
-    
-//         // console.log('Data fetch c noStore();ompleted after 3 seconds.');
-//         console.log(data)
-//         return data.rows;
-}
+  }

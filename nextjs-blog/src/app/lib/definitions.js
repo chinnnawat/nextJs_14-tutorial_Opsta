@@ -25,10 +25,7 @@ export const Invoice = {
   status: Status,
 };
 
-export const Revenue = {
-  month: String,
-  revenue: Number,
-};
+export const Revenue = []
 
 export const LatestInvoice = {
   id: String,
