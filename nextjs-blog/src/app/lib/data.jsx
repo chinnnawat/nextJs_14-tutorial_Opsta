@@ -4,44 +4,44 @@ import { NextResponse } from 'next/server';
 import { unstable_noStore as noStore } from 'next/cache';
 import { Revenue } from '@/app/lib/definitions';
 
-const data = await sql<LatestInvoiceRaw>`
-    SELECT invoices.amount, customers.name, customers.image_url, customers.email
-    FROM invoices
-    JOIN customers ON invoices.customer_id = customers.id
-    ORDER BY invoices.date DESC
-    LIMIT 5`;
-const invoiceCountPromise = sql`SELECT COUNT(*) FROM invoices`;
-const customerCountPromise = sql`SELECT COUNT(*) FROM customers`;
 
-// console.log(data)
+export async function fetchLatestInvoices(){
+    noStore();
+    try {
+        const data = await sql `
+        SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
+        FROM invoices
+        JOIN customers ON invoices.customer_id = customers.id
+        ORDER BY invoices.date DESC
+        LIMIT 5
+        `;
+        const latestInvoices = data.rows.map(invoice => ({
+          id: invoice.id,
+          customers: invoice.name,
+          image_url: invoice.image_url,
+          email: invoice.email,
+          amount: invoice.amount,
 
-export async function fetchCardData(){
-    const invoiceCountPromise = sql`SELECT COUNT(*) FROM invoices`;
-    const customerCountPromise = sql`SELECT COUNT(*) FROM customers`;
-    const invoiceStatusPromise = sql`SELECT
-        SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) AS "paid",
-        SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) AS "pending"
-        FROM invoices`;
-
-    const data = await Promise.all([
-        invoiceCountPromise,
-        customerCountPromise,
-        invoiceStatusPromise,
-    ])
+        }))
+        return latestInvoices;
+        // console.log(latestInvoices);
+    } catch (error) {
+        console.log("error",error);
+        throw new Error("Fail")
+    }
 }
 
-// Function to fetch revenue data
+
 export async function fetchRevenue() {
-    noStore(); 
+    noStore();  // Disable caching
     try {
       const data = await sql`SELECT * FROM revenue;`;
   
       const revenueData = data.rows.map(row => ({
-        month: String(row.month),
-        revenue: parseInt(row.revenue),
+        month: String(row.month),  // Ensure month is a string
+        revenue: parseInt(row.revenue),  // Convert revenue to integer
       }));
-  
-      // Create an array of Revenue objects
+
       const revenueArray = revenueData.map(item => {
         return {
           ...Revenue,
@@ -50,8 +50,8 @@ export async function fetchRevenue() {
         };
       });
   
-      console.log("Revenue data added successfully", revenueArray);
-      return revenueArray;
+      // console.log("Revenue data added successfully", revenueArray);
+      return revenueArray;  // Return the formatted data
   
     } catch (error) {
       console.error("DatabaseError: ", error);

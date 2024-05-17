@@ -30,4 +30,8 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+  .grid-cols-13 {
+    display: grid;
+    grid-template-columns: repeat(13, minmax(0, 1fr));
+  }
 }

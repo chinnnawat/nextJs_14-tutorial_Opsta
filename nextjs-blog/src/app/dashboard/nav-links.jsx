@@ -12,7 +12,7 @@ import {
 // Map of links to display in the side navigation.
 const links =[
     {   name: 'Home',
-        href: '/',
+        href: '/dashboard',
         icon: HomeIcon,
     },
     {   name: 'Invoices',
