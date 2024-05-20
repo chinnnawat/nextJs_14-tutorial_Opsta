@@ -1,5 +1,6 @@
 import { lusitana } from '@/app/ui/fonts';
 import { fetchRevenue } from '@/app/lib/data';
+import RefreshButton from './refreshButton';
 
 export default async function RecentRevenue() {
     const revenue = await fetchRevenue();
@@ -41,6 +42,7 @@ export default async function RecentRevenue() {
                         </p>
                     </div>))}
               </div>
+              <RefreshButton/>
           </div>
         </div>
     )
