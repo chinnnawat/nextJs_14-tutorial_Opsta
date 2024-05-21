@@ -22,7 +22,7 @@ export default async function CardWrapper() {
         totalPendingStatus
     } = await fetchCardData()
 
-    console.log(totalPaidStatus);
+    // console.log(totalPaidStatus);
     return(
         <>
             <Card title="Collected" value={totalPaidStatus} type="collected"/>

@@ -5,6 +5,31 @@ import { unstable_noStore as noStore } from 'next/cache';
 import { Revenue } from '@/app/lib/definitions';
 import { formatCurrency } from './utils';
 
+const ITEM_PER_PAGE = 6;
+export async function fetchInvoicePage(query){
+  noStore();
+  try {
+    const data = await sql `
+    SELECT COUNT(*)
+    FROM invoices
+    JOIN customers ON invoices.customer_id = customers.id
+    WHERE
+      customers.name ILIKE ${`%${query}%`} OR
+      customers.email ILIKE ${`%${query}%`} OR
+      invoices.amount::text ILIKE ${`%${query}%`} OR
+      invoices.date::text ILIKE ${`%${query}%`} OR
+      invoices.status ILIKE ${`%${query}%`}
+    `
+    const totalPages = Math.ceil(Number(data.rows[0].count))/ITEM_PER_PAGE;
+    return totalPages;
+  
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch total number of invoices.');
+  } 
+}
+
+
 
 export async function fetchLatestInvoices(){
     noStore();
@@ -16,7 +41,7 @@ export async function fetchLatestInvoices(){
         ORDER BY customers.email, invoices.date DESC
         LIMIT 5
         `;
-        console.log(data);
+        // console.log(data);
         const latestInvoices = data.rows.map(invoice => ({
           id: invoice.id,
           customers: invoice.name,
