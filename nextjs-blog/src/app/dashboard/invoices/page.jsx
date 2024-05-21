@@ -24,7 +24,7 @@ export default async function Page({searchParams}){
                 <CreateInvoice/>
             </div>
             <div>
-                <Pagination totalPage={6}/>
+                <Pagination totalPages={6}/>
             </div>
         </div>
     )

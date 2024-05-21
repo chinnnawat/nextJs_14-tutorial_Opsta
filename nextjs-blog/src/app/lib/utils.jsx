@@ -18,4 +18,9 @@ export function generatePagination(currentPage,totalPages){
 
     return [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages,
     ];
+    // if (typeof totalPages === 'number') {
+    //     console.log(`Total pages: ${totalPages}`);
+    //     return "Hello ";
+    // }
+    // return "Susu";
 }
