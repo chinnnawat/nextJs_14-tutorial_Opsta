@@ -5,6 +5,28 @@ export function formatCurrency(amount){
     });
 };
 
+// export function formatDateToLocal(dateStr, locale = 'en-US') {
+//     const date = new Date(dateStr);
+//     const options = {
+//       day: 'numeric',
+//       month: 'short',
+//       year: 'numeric',
+//     };
+//     const formatter = new Intl.DateTimeFormat(locale, options);
+//     return formatter.format(date);
+//   }
+
+export function formatDateToLocal(dateStr, locale = 'th-TH'){
+    const date = new Date(dateStr);
+    const options = {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+    };
+    const formatter = new Intl.DateTimeFormat(locale, options);
+    return formatter.format(date);
+}
+
 export function generatePagination(currentPage,totalPages){
     if(totalPages <= 7){
         return Array.from({length: totalPages}, (_,i) => i+1)

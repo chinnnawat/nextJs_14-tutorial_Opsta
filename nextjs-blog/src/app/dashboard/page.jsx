@@ -17,7 +17,7 @@ import { Suspense } from 'react';
  
 export default async function Page() {
 
-  const cardData = await fetchCardData();
+  // const cardData = await fetchCardData();
 
 
   const revenue = await fetchRevenue();

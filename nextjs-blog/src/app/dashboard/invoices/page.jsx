@@ -2,7 +2,10 @@ import { fetchInvoicePage } from "@/app/lib/data";
 import { lusitana } from '@/app/ui/fonts';
 import { CreateInvoice, UpdateInvoice } from "@/app/ui/invoices/buttons";
 import Pagination from "@/app/ui/invoices/pagination";
+import InvoicesTable from "@/app/ui/invoices/table";
 import Search from "@/app/ui/search";
+import { InvoiceSkeleton, InvoicesMobileSkeleton, TableRowSkeleton, InvoicesTableSkeleton } from "@/app/ui/skeletons";
+import { Suspense } from "react";
 
 export const metadata = {
     title: 'Invoices',
@@ -10,9 +13,11 @@ export const metadata = {
 
 export default async function Page({searchParams}){
     const query = searchParams?.query || '';
-    const page = Number(searchParams?.page) || 1;
+    const currentPage = Number(searchParams?.page) || 1;
 
-    // const totalPage = await fetchInvoicePage(query)
+    const totalPage = await fetchInvoicePage(query)
+
+    // console.log(totalPage);
 
     return(
         <div className="w-full">
@@ -23,8 +28,11 @@ export default async function Page({searchParams}){
                 <Search placeholder="Search invoices..."/>
                 <CreateInvoice/>
             </div>
-            <div>
-                <Pagination totalPages={6}/>
+                <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton/>}>
+                    <InvoicesTable query={query} currentPage={currentPage}/>
+                </Suspense>
+            <div className="mt-5 flex w-full justify-center">
+                <Pagination totalPages={totalPage}/>
             </div>
         </div>
     )

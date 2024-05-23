@@ -6,6 +6,40 @@ import { Revenue } from '@/app/lib/definitions';
 import { formatCurrency } from './utils';
 
 const ITEM_PER_PAGE = 6;
+
+export async function fetchFilterInvoice(query, currentPage){
+  noStore();
+  const offset = (currentPage-1)*ITEM_PER_PAGE
+  try {
+    const invoices = await sql `
+    SELECT
+      invoices.id,
+          invoices.amount,
+          invoices.date,
+          invoices.status,
+          customers.name,
+          customers.email,
+          customers.image_url
+        FROM invoices
+        JOIN customers ON invoices.customer_id = customers.id
+        WHERE
+          customers.name ILIKE ${`%${query}%`} OR
+          customers.email ILIKE ${`%${query}%`} OR
+          invoices.amount::text ILIKE ${`%${query}%`} OR
+          invoices.date::text ILIKE ${`%${query}%`} OR
+          invoices.status ILIKE ${`%${query}%`}
+        
+        LIMIT ${ITEM_PER_PAGE} OFFSET ${offset}
+    `
+    console.log(invoices);
+    return invoices.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch invoices.');
+  }
+}
+
+
 export async function fetchInvoicePage(query){
   noStore();
   try {
@@ -20,7 +54,7 @@ export async function fetchInvoicePage(query){
       invoices.date::text ILIKE ${`%${query}%`} OR
       invoices.status ILIKE ${`%${query}%`}
     `
-    const totalPages = Math.ceil(Number(data.rows[0].count))/ITEM_PER_PAGE;
+    const totalPages = Math.ceil(Number(data.rows[0].count)/ITEM_PER_PAGE);
     return totalPages;
   
   } catch (error) {

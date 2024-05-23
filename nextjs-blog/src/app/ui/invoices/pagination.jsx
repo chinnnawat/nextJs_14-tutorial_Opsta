@@ -27,7 +27,7 @@ export default function Pagination({ totalPages }){
         <div className='inline-flex'>
 
             <div className="flex -space-x-px">
-                hello
+                {/* hello */}
             </div>
         </div>
     )

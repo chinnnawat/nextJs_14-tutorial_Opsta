@@ -1,5 +1,14 @@
 {
-  "node": {},
+  "node": {
+    "ad66c49bd72eab927d27970bc5dd54325c8f69a0": {
+      "workers": {
+        "app/dashboard/invoices/page": "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Fsrc%2Fapp%2Flib%2Faction.jsx%22%2C%5B%22deleteInvoice%22%5D%5D%5D&__client_imported__=!"
+      },
+      "layer": {
+        "app/dashboard/invoices/page": "rsc"
+      }
+    }
+  },
   "edge": {},
-  "encryptionKey": "1NG8M4e4PoX7jdMibnAkb9QeFXDy3WYW32YlSUHZXEI="
+  "encryptionKey": "oGRJYQJevuH/LnOwkr2sUQPMcSsR3BxK2wJxV7qza8s="
 }
